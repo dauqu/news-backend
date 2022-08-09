@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 });
 
 //User Login
-router.post("/", async (req, res) => {
+router.post("/", checkUser, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -38,48 +38,79 @@ router.post("/", async (req, res) => {
       }
     );
 
-    const verify = jwt.verify(token, process.env.JWT_SECRET);
-
     //Set cookie
     res.cookie("auth_token", token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 30,
     }); //30 days
 
-    //Set LocalStorage
-    res.locals.user = {
-      id: user._id,
-      username: user.username,
-    };
-
-    res.status(200).json({ message: "Login Successful", status: "success" });
+    res
+      .status(200)
+      .json({ message: "Login Successful", status: "success", token: token });
   } catch (error) {
     res.status(500).json({ message: error.message, status: "error" });
   }
 });
 
 //Check User is login or not
-router.get("/check-login", async (req, res) => {
-  try {
-    const token = req.cookies.auth_token;
+router.get("/isLoggedIn", async (req, res) => {
+  const token = req.body.token;
 
-    const have_valid_tokem = jwt.verify(token, process.env.JWT_SECRET, {
-      algorithm: "HS256",
-    });
+  if (token == undefined || token == null || token == "") {
+    return res.json(false);
+  }
 
-    const id_from_token = have_valid_tokem.id;
+  const have_valid_tokem = jwt.verify(token, process.env.JWT_SECRET, {
+    algorithm: "HS256",
+  });
 
-    //Check Same id have database
-    const user = await UsersSchema.findOne({ id_from_token }).lean();
+  if (!have_valid_tokem) {
+    return res.json(false);
+  }
 
-    if (user == undefined) {
-      res.json(false);
-    } else {
-      res.json(true);
-    }
-  } catch (error) {
+  const id_from_token = have_valid_tokem.id;
+
+  //Check Same id have database
+  const user = await UsersSchema.findOne({ id_from_token }).lean();
+
+  if (user == undefined || user == null || user == "") {
     res.json(false);
+  } else {
+    res.json(true);
   }
 });
+
+async function checkUser(req, res, next) {
+  const email = req.body.email;
+  const password = req.body.password;
+  //Check all filled or not
+  if (
+    email == "" ||
+    password == "" ||
+    email == undefined ||
+    password == undefined ||
+    email == null ||
+    password == null
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Please fill all fields", status: "warning" });
+  }
+  //Check email is valid or not
+  if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(req.body.email)) {
+    return res
+      .status(400)
+      .json({ message: "Please enter a valid email", status: "warning" });
+  }
+
+  //Check password is valid or not
+  if (req.body.password.length < 6) {
+    return res.status(400).json({
+      message: "Password must be at least 6 characters",
+      status: "warning",
+    });
+  }
+  next();
+}
 
 module.exports = router;

@@ -16,9 +16,10 @@ router.post("/", validateRegister, async (req, res) => {
   //Save user to database
   const save_user = new UsersSchema({
     full_name: req.body.full_name,
-    avator: req.body.avator,
-    title: req.body.title,
-    about: req.body.about,
+    avator:
+      "https://styles.redditmedia.com/t5_2c83sr/styles/profileIcon_4dwzf4syg0w51.png",
+    title: "something",
+    about: "something",
     phone: req.body.phone,
     email: req.body.email,
     username: req.body.username,
@@ -36,16 +37,48 @@ router.post("/", validateRegister, async (req, res) => {
 
 //Middleware for register validation
 async function validateRegister(req, res, next) {
+  const { full_name, phone, email, username, password } = req.body;
+
+  //Check if all fields are filled
+  if (
+    full_name === "" ||
+    phone === "" ||
+    email === "" ||
+    username === "" ||
+    password === "" ||
+    full_name === undefined ||
+    phone === undefined ||
+    email === undefined ||
+    username === undefined ||
+    password === undefined ||
+    full_name === null ||
+    phone === null ||
+    email === null ||
+    username === null ||
+    password === null
+  ) {
+    return res
+      .status(400)
+      .json({ message: "All fields are required", status: "error" });
+  }
+
+  //Check password length
+  if (password.length < 6) {
+    return res.status(400).json({
+      message: "Password must be at least 6 characters long",
+      status: "error",
+    });
+  }
+
   //Check if user exists
   const user = await UsersSchema.findOne({ email: req.body.email });
   if (user)
     return res.status(400).json({
-      message: "User already exists",
+      message: "Email already exists",
       status: "error",
     });
 
   //Check email is valid
-  const email = req.body.email;
   const email_regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   if (!email_regex.test(email))
     return res.status(400).json({
@@ -54,7 +87,6 @@ async function validateRegister(req, res, next) {
     });
 
   //Check Username is valid
-  const username = req.body.username;
   const username_regex = /^[a-zA-Z0-9]+$/;
   if (!username_regex.test(username))
     return res.status(400).json({
@@ -66,7 +98,23 @@ async function validateRegister(req, res, next) {
   const user_exists = await UsersSchema.findOne({ username: username });
   if (user_exists)
     return res.status(400).json({
-      message: "Username is not unique",
+      message: "Username is already taken",
+      status: "error",
+    });
+
+  //Check phone is valid
+  const phone_regex = /^[0-9]{10}$/;
+  if (!phone_regex.test(phone))
+    return res.status(400).json({
+      message: "Phone is not valid",
+      status: "error",
+    });
+
+  //Check phone is unique
+  const phone_exists = await UsersSchema.findOne({ phone: phone });
+  if (phone_exists)
+    return res.status(400).json({
+      message: "Phone is already exists",
       status: "error",
     });
 
