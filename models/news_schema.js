@@ -31,6 +31,10 @@ const NewsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  is_published: {
+    type: Boolean,
+    required: true,
+  },
   updated_at: {
     type: String,
     default: Date.now,

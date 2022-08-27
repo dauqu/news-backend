@@ -38,7 +38,6 @@ app.use(`${apiv1}/news`, require("./routes/news"));
 app.use(`${apiv1}/profile`, require("./routes/profile"));
 app.use(`${apiv1}/comments`, require("./routes/comments"));
 app.use(`${apiv1}/watchlists`, require("./routes/watchlists"));
-app.use(`${apiv1}/entries`, require("./routes/add_entry"));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);

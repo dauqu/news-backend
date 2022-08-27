@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const CategoriesSchema = require("./../models/categories_schema");
+const Slugyfy = require("slugify");
 
 //Get all categories
 router.get("/", async (req, res) => {
@@ -29,12 +30,20 @@ router.get("/:id", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
-  const decoded = JWT.verify(req.cookies.token, process.env.JWT_SECRET);
+  
+  //Create slug with remove spaces and lowercase
+  const slug = Slugyfy(req.body.name, {
+    lower: true,
+    remove: /[*+~.()'"!:@_]/g,
+  });
+
+
   const category = new CategoriesSchema({
     name: req.body.name,
+    slug: slug,
     description: req.body.description,
     image: req.body.image,
-    publisher: decoded.username,
+    publisher: "harsha web",
   });
   try {
     await category.save();
