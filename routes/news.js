@@ -22,7 +22,6 @@ router.get("/:id", async (req, res) => {
         .status(404)
         .json({ message: "News not found", status: "error" });
     }
-
     res.status(200).json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -41,7 +40,6 @@ router.get("/category/:category", async (req, res) => {
         .status(404)
         .json({ message: "News not found", status: "error" });
     }
-
     res.status(200).json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });

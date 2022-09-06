@@ -83,6 +83,7 @@ router.get("/isLoggedIn", async (req, res) => {
 });
 
 async function checkUser(req, res, next) {
+  
   const email = req.body.email;
   const password = req.body.password;
   //Check all filled or not
