@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const NewsSchema = require("../models/news_schema");
+const slugify = require("slugify");
+//JWT authentication
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 //Get all news
 router.get("/", async (req, res) => {
@@ -31,9 +35,9 @@ router.get("/:id", async (req, res) => {
 //Get news by category
 router.get("/category/:category", async (req, res) => {
   try {
-    const news = await NewsSchema.findOne({
+    const news = await NewsSchema.find({
       category: req.params.category,
-    });
+    }).lean();
 
     if (!news) {
       return res
@@ -48,12 +52,40 @@ router.get("/category/:category", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
-  const decoded = JWT.verify(req.cookies.token, process.env.JWT_SECRET);
+  //Create Slug with filter to remove special characters
+  const slug = slugify(req.body.title, {
+    replacement: "-",
+    remove: /[*+~.()'"!:@]/g,
+    lower: true,
+  });
+
+  //Check user have token or not
+  const token = req.body.token;
+
+  if (token == undefined || token == null || token == "") {
+    return res.json(false);
+  }
+
+  const have_valid_tokem = jwt.verify(token, process.env.JWT_SECRET, {
+    algorithm: "HS256",
+  });
+
+  if (!have_valid_tokem) {
+    return res.json(false);  
+  }
+
+  console.log(have_valid_tokem);
+
+  // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const news = new NewsSchema({
     title: req.body.title,
-    description: req.body.description,
+    articles: req.body.articles,
+    slug: slug,
     image: req.body.image,
-    publisher: decoded.username,
+    category: req.body.category,
+    publisher: have_valid_tokem.username,
+    read_more: req.body.read_more,
+    is_published: false,
   });
   try {
     await news.save();

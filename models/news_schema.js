@@ -11,10 +11,6 @@ const NewsSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  description: {
-    type: String,
-    required: true,
-  },
   image: {
     type: String,
     required: true,
@@ -23,7 +19,7 @@ const NewsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  author: {
+  publisher: {
     type: String,
     required: true,
   },
@@ -31,12 +27,16 @@ const NewsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  read_more: {
+    type: String,
+  },
+
   is_published: {
     type: Boolean,
     required: true,
   },
   updated_at: {
-    type: String,
+    type: Date,
     default: Date.now,
   },
   created_at: {
