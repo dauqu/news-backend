@@ -37,7 +37,6 @@ router.post("/", async (req, res) => {
     remove: /[*+~.()'"!:@_]/g,
   });
 
-
   const category = new CategoriesSchema({
     name: req.body.name,
     slug: slug,

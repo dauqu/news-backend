@@ -36,8 +36,7 @@ app.use(`${apiv1}/register`, require("./routes/register"));
 app.use(`${apiv1}/categories`, require("./routes/categories"));
 app.use(`${apiv1}/news`, require("./routes/news"));
 app.use(`${apiv1}/profile`, require("./routes/profile"));
-app.use(`${apiv1}/comments`, require("./routes/comments"));
-app.use(`${apiv1}/watchlists`, require("./routes/watchlists"));
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);

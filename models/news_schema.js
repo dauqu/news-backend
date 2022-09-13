@@ -30,7 +30,10 @@ const NewsSchema = new mongoose.Schema({
   read_more: {
     type: String,
   },
-
+  language: {
+    type: String,
+    required: true,
+  },
   is_published: {
     type: Boolean,
     required: true,

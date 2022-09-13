@@ -16,14 +16,15 @@ router.post("/", validateRegister, async (req, res) => {
   //Save user to database
   const save_user = new UsersSchema({
     full_name: req.body.full_name,
-    avator:
-      "https://styles.redditmedia.com/t5_2c83sr/styles/profileIcon_4dwzf4syg0w51.png",
-    title: "something",
-    about: "something",
+    dp: "https://styles.redditmedia.com/t5_2c83sr/styles/profileIcon_4dwzf4syg0w51.png",
+    title: "I am new here :)",
+    about: "Edit your profile to add more information about yourself",
     phone: req.body.phone,
     email: req.body.email,
     username: req.body.username,
     password: hashed_password,
+    language: "english",
+    country: "india",
   });
   try {
     await save_user.save();

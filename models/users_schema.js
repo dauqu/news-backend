@@ -5,8 +5,9 @@ const UsersSchema = new mongoose.Schema({
   full_name: {
     type: String,
   },
-  avatar: {
+  dp: {
     type: String,
+    required: true,
   },
   title: {
     type: String,
@@ -21,6 +22,12 @@ const UsersSchema = new mongoose.Schema({
     type: String,
   },
   email: {
+    type: String,
+  },
+  language: {
+    type: String,
+  },
+  country: {
     type: String,
   },
   password: {
