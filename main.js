@@ -1,7 +1,12 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 4000;
 
+//Generate random 5 digit number
+const random = Math.floor(10000 + Math.random() * 80000);
+console.log(random);
+   
+const PORT = process.env.PORT || random;  
+       
 //Allow cors
 const cors = require("cors");
 //Loop of allowed origins
@@ -26,7 +31,7 @@ const connectDB = require("./config/database");
 connectDB();
 
 app.get("/", (req, res) => {
-  res.send("Better and faster than a speeding bullet");
+  res.send("Hello World!");
 });
 
 const apiv1 = "/api/v1";
