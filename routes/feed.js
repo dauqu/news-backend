@@ -15,6 +15,8 @@ router.get("/", async (req, res) => {
       username: "harshaweb",
     }).lean();
 
+    
+
     //Map news with user details
     const newsWithUser = news.map((item) => {
       return {
@@ -31,7 +33,6 @@ router.get("/", async (req, res) => {
         },
       };
     });
-
     res.status(200).json(newsWithUser);
   } catch (error) {
     res.status(500).json({ message: error.message });

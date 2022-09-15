@@ -46,6 +46,8 @@ router.post("/", checkUser, async (req, res) => {
       secure: true,
     }); //300 days
 
+    res.setHeader("x-auth-token", token);
+
     res
       .status(200)
       .json({ message: "Login Successful", status: "success", token: token });
@@ -56,7 +58,7 @@ router.post("/", checkUser, async (req, res) => {
 
 //Check User is login or not
 router.get("/isLoggedIn", async (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["x-auth-token"];
 
   if (token == undefined || token == null || token == "") {
     return res.json(false);
@@ -83,7 +85,6 @@ router.get("/isLoggedIn", async (req, res) => {
 });
 
 async function checkUser(req, res, next) {
-  
   const email = req.body.email;
   const password = req.body.password;
   //Check all filled or not
