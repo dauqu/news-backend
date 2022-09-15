@@ -45,6 +45,9 @@ app.use(`${apiv1}/feed`, require("./routes/feed"));
 app.use(`${apiv1}/bookmarks`, require("./routes/bookmarks"));
 app.use(`${apiv1}/search`, require("./routes/search"));
 
+app.use(`${apiv1}/terms`, require("./routes/terms"));
+app.use(`${apiv1}/about`, require("./routes/about"));
+
 //Static files
 app.use(express.static("public"));
 
