@@ -4,8 +4,8 @@ const app = express();
 //Generate random 5 digit number
 const random = Math.floor(10000 + Math.random() * 80000);
 console.log(random);
-   
-const PORT = process.env.PORT || 4000;  
+
+const PORT = process.env.PORT || 4000;
 
 //Allow cors
 const cors = require("cors");
@@ -34,12 +34,18 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+//Send html file
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
 const apiv1 = "/api/v1";
 
 app.use(`${apiv1}/login`, require("./routes/login"));
 app.use(`${apiv1}/register`, require("./routes/register"));
 app.use(`${apiv1}/categories`, require("./routes/categories"));
 app.use(`${apiv1}/news`, require("./routes/news"));
+app.use(`${apiv1}/files`, require("./routes/files"));
 app.use(`${apiv1}/profile`, require("./routes/profile"));
 app.use(`${apiv1}/feed`, require("./routes/feed"));
 app.use(`${apiv1}/bookmarks`, require("./routes/bookmarks"));
@@ -54,7 +60,6 @@ app.use(express.static("public"));
 app.use("/privacy-policy", (req, res) => {
   res.sendFile(__dirname + "/public/privacy-policy.html");
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
