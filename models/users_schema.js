@@ -33,6 +33,12 @@ const UsersSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  rpt: { //Reset password token
+    type: String,
+  },
+  otp: { //One time password
+    type: String,
+  },
   updated_at: {
     type: String,
     default: Date.now,

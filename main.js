@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const fileUpload = require("express-fileupload");
+
 
 //Generate random 5 digit number
 const random = Math.floor(10000 + Math.random() * 80000);
@@ -22,9 +24,20 @@ app.use(
 //Allow JSON to be parsed
 app.use(express.json());
 
+// Enable file upload using express-fileupload
+app.use(
+  fileUpload({
+    createParentPath: true,
+  })
+);
+
 //Cookies
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
+
+//Allow static files
+app.use(express.static(__dirname + "/files"));
+
 
 //Connect to database
 const connectDB = require("./config/database");
@@ -35,8 +48,8 @@ app.get("/", (req, res) => {
 });
 
 //Send html file
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+app.get("/files", (req, res) => {
+  res.sendFile(__dirname + "/files/");
 });
 
 const apiv1 = "/api/v1";
@@ -50,6 +63,8 @@ app.use(`${apiv1}/profile`, require("./routes/profile"));
 app.use(`${apiv1}/feed`, require("./routes/feed"));
 app.use(`${apiv1}/bookmarks`, require("./routes/bookmarks"));
 app.use(`${apiv1}/search`, require("./routes/search"));
+app.use(`${apiv1}/users`, require("./routes/users"));
+app.use(`${apiv1}/notifications`, require("./routes/notifications"));
 
 app.use(`${apiv1}/terms`, require("./routes/terms"));
 app.use(`${apiv1}/about`, require("./routes/about"));
@@ -58,7 +73,7 @@ app.use(`${apiv1}/about`, require("./routes/about"));
 app.use(express.static("public"));
 
 app.use("/privacy-policy", (req, res) => {
-  res.sendFile(__dirname + "/public/privacy-policy.html");
+  res.sendFile(__dirname + "/public/privacy-policy.html"); 
 });
 
 app.listen(PORT, () => {

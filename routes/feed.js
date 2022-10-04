@@ -15,8 +15,6 @@ router.get("/", async (req, res) => {
       username: "harshaweb",
     }).lean();
 
-
-
     //Map news with user details
     const newsWithUser = news.map((item) => {
       return {

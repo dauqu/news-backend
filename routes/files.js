@@ -8,7 +8,7 @@ const JWT = require("jsonwebtoken");
 const User_Model = require("./../models/users_schema");
 
 //Upload File
-router.post("/", upload_file, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     if (!req.files) {
       res.send({
@@ -19,6 +19,10 @@ router.post("/", upload_file, async (req, res) => {
       // Send File on Location
       const uploadedFile = req.files.uploadedFile;
       uploadedFile.mv("./files/" + uploadedFile.name);
+
+      res.setHeader("Authorization", req.cookies.token);
+
+      // Send Response with header
       res.send({
         status: "success",
         message: "File successfully uploaded",
@@ -31,7 +35,7 @@ router.post("/", upload_file, async (req, res) => {
 
 //Get File directly
 router.get("/dir", (req, res) => {
-  res.json({ files_Path: "http://localhost:4000" + "/files" });
+  res.json({ files_Path: "http://localhost:4000" + "/" });
 });
 
 //Static file
@@ -48,7 +52,7 @@ router.get("/uploaded_files", (req, res) => {
           return {
             id: Buffer.from(file).toString("base64"),
             name: file,
-            path: "http://localhost:4000" + "/files/" + file,
+            path: "http://localhost:4000" + "/" + file,
             size: fs.statSync(path.join(directoryPath, file)).size,
             file_extension: path.extname(file),
             date: fs.statSync(path.join(directoryPath, file)).mtime,
