@@ -52,7 +52,7 @@ router.get("/uploaded_files", (req, res) => {
           return {
             id: Buffer.from(file).toString("base64"),
             name: file,
-            path: "http://localhost:4000" + "/" + file,
+            path: "https://news.dauqu.com" + "/" + file,
             size: fs.statSync(path.join(directoryPath, file)).size,
             file_extension: path.extname(file),
             date: fs.statSync(path.join(directoryPath, file)).mtime,
