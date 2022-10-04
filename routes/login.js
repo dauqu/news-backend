@@ -3,7 +3,7 @@ const router = express.Router();
 const UsersSchema = require("./../models/users_schema");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 router.get("/", (req, res) => {
   res.json({
