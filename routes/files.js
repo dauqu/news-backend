@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 
 //Get File directly
 router.get("/dir", (req, res) => {
-  res.json({ files_Path: "http://localhost:4000" + "/" });
+  res.json({ files_Path: "https://news.dauqu.com" + "/" });
 });
 
 //Static file
