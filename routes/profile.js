@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const UsersSchema = require("./../models/users_schema");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 //Get Profile
-router.post("/", async (req, res) => {
-  console.log(req.body);
-  const token = req.cookies.auth_token || req.body.token;
+router.get("/", async (req, res) => {
+
+  const token = req.cookies.auth_token || req.body.token || req.headers["x-auth-token"];
 
   if (token === undefined || token === null || token === "") {
     return res.status(401).json({ message: "Unauthorized" });
