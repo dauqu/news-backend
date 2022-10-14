@@ -112,9 +112,12 @@ async function upload_file(req, res, next) {
 
 //Middleware for dlete files
 async function delete_file(req, res, next) {
+  //Check user have token or not
+  const token = req.cookies.auth_token || req.body.token || req.headers["x-auth-token"];
+
   try {
     //Check if user is logged in
-    if (req.cookies.token === undefined) {
+    if (token === undefined || token === null || token === "") {
       return res.status(401).json({
         message: "You are not logged in",
         status: "warning",
@@ -122,7 +125,7 @@ async function delete_file(req, res, next) {
     }
 
     //Check if user is admin
-    const decoded = JWT.verify(req.cookies.token, process.env.JWT_SECRET);
+    const decoded = JWT.verify(token, process.env.JWT_SECRET);
     //Get id from token
     const id = decoded.id;
     //Get user role by id
