@@ -7,6 +7,16 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 //Get all news
+router.get("/", async (req, res) => {
+  try {
+    const news = await NewsSchema.find().lean();
+    res.status(200).json(news);
+  } catch (error) {
+    res.status(500).json({ message: error.message, status: "error" });
+  }
+});
+
+//Get all news
 router.get("/:page", async (req, res) => {
   const page = req.params.page;
   //Each page will have 10 news
