@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 //Get all news
-router.get("/:page", async (req, res) => {
+router.get("/pages/:page", async (req, res) => {
   const page = req.params.page;
   //Each page will have 10 news
   const limit = 10;
