@@ -7,9 +7,18 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 //Get all news
-router.get("/", async (req, res) => {
+router.get("/:page", async (req, res) => {
+  const page = req.params.page;
+  //Each page will have 10 news
+  const limit = 10;
+  const skip = (page - 1) * limit;
   try {
-    const news = await NewsSchema.find().lean();
+    //Get all news with publisher name
+    const news = await NewsSchema.find({ published: true })
+      .populate("publisher", "name")
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit);
     res.status(200).json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -60,7 +69,7 @@ router.post("/", async (req, res) => {
   });
 
   //Check user have token or not
-  const token = req.body.token;
+  const token = req.cookies.auth_token || req.body.token || req.headers["x-auth-token"];
 
   if (token == undefined || token == null || token == "") {
     return res.json(false);
@@ -71,7 +80,7 @@ router.post("/", async (req, res) => {
   });
 
   if (!have_valid_tokem) {
-    return res.json(false);  
+    return res.json(false);
   }
 
   console.log(have_valid_tokem);
@@ -138,5 +147,6 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 module.exports = router;

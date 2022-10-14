@@ -33,6 +33,7 @@ const NewsSchema = new mongoose.Schema({
   language: {
     type: String,
     required: true,
+    default: "en",
   },
   is_published: {
     type: Boolean,
