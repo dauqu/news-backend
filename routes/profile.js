@@ -7,6 +7,7 @@ require("dotenv").config();
 //Get Profile
 router.get("/", async (req, res) => {
 
+  //Check user have token or not
   const token = req.cookies.auth_token || req.body.token || req.headers["x-auth-token"];
 
   if (token === undefined || token === null || token === "") {

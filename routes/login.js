@@ -58,7 +58,8 @@ router.post("/", checkUser, async (req, res) => {
 
 //Check User is login or not
 router.get("/isLoggedIn", async (req, res) => {
-  const token = req.headers["x-auth-token"];
+  //Check user have token or not
+  const token = req.cookies.auth_token || req.body.token || req.headers["x-auth-token"];
 
   if (token == undefined || token == null || token == "") {
     return res.json(false);
