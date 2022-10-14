@@ -8,11 +8,12 @@ require("dotenv").config();
 
 //Get all news
 router.get("/", async (req, res) => {
+  //Get all latest news 50 news 
   try {
-    const news = await NewsSchema.find().lean();
-    res.status(200).json(news);
+    const news = await NewsSchema.find().sort({ _id: -1 }).limit(100);
+    res.json(news);
   } catch (error) {
-    res.status(500).json({ message: error.message, status: "error" });
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -56,7 +57,7 @@ router.get("/category/:category", async (req, res) => {
   try {
     const news = await NewsSchema.find({
       category: req.params.category,
-    }).lean();
+    }).lean().sort({ _id: -1 }).limit(100);
 
     if (!news) {
       return res
