@@ -94,7 +94,6 @@ router.post("/", async (req, res) => {
     return res.json(false);
   }
 
-  console.log(have_valid_tokem);
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const news = new NewsSchema({

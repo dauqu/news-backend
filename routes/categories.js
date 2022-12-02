@@ -30,7 +30,7 @@ router.get("/:id", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
-  
+
   //Create slug with remove spaces and lowercase
   const slug = Slugyfy(req.body.name, {
     lower: true,
