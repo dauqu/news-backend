@@ -45,7 +45,7 @@ connectDB();
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
-});
+}); 
 
 //Send html file
 app.get("/files", (req, res) => {
