@@ -77,5 +77,5 @@ app.use("/privacy-policy", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT} After Rebuild`);
+  console.log(`Server is running on port http://localhost:${PORT} After Rebuild Second Time`);
 }); //Start the server
