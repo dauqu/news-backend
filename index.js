@@ -12,7 +12,8 @@ const PORT = process.env.PORT || 4000;
 //Allow cors
 const cors = require("cors");
 //Loop of allowed origins
-const allowedOrigins = ["http://localhost:3001", "http://localhost:3000", "https://admin-for-all.vercel.app"];
+const allowedOrigins = ["http://localhost:3001", "http://localhost:3000", "https://admin-for-all.vercel.app",
+                        "https://harsha-news-21-frontend-ebsr5yren-dauqu.vercel.app"];
 
 app.use(
   cors({
