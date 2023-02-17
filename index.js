@@ -2,18 +2,17 @@ const express = require("express");
 const app = express();
 const fileUpload = require("express-fileupload");
 
-
-//Generate random 5 digit number
-const random = Math.floor(10000 + Math.random() * 80000);
-console.log(random);
-
 const PORT = process.env.PORT || 4000;
 
 //Allow cors
 const cors = require("cors");
 //Loop of allowed origins
-const allowedOrigins = ["http://localhost:3001", "http://localhost:3000", "https://admin-for-all.vercel.app",
-                        "https://harsha-news-21-frontend-ebsr5yren-dauqu.vercel.app"];
+const allowedOrigins = [
+  "http://localhost:3001",
+  "http://localhost:3000",
+  "https://admin-for-all.vercel.app",
+  "https://harsha-news-21-frontend-ebsr5yren-dauqu.vercel.app",
+];
 
 app.use(
   cors({
@@ -39,14 +38,13 @@ app.use(cookieParser());
 //Allow static files
 app.use(express.static(__dirname + "/files"));
 
-
 //Connect to database
 const connectDB = require("./config/database");
 connectDB();
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
-}); 
+});
 
 //Send html file
 app.get("/files", (req, res) => {
@@ -74,9 +72,11 @@ app.use(`${apiv1}/about`, require("./routes/about"));
 app.use(express.static("public"));
 
 app.use("/privacy-policy", (req, res) => {
-  res.sendFile(__dirname + "/public/privacy-policy.html"); 
+  res.sendFile(__dirname + "/public/privacy-policy.html");
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT} After Rebuild Second Time`);
+  console.log(
+    `Server is running on port http://localhost:${PORT} After Rebuild Second Time`
+  );
 }); //Start the server
