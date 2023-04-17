@@ -11,7 +11,7 @@ const allowedOrigins = [
   "http://localhost:3001",
   "http://localhost:3000",
   "https://admin-for-all.vercel.app",
-  "https://news-admin-panel.vercel.app",
+  "https://dauqunews.vercel.app",
 ];
 
 app.use(
