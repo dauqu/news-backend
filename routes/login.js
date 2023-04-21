@@ -4,11 +4,16 @@ const UsersSchema = require("./../models/users_schema");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
+const CheckAuth = require("./../functions/check_auth");
 
-router.get("/", (req, res) => {
-  res.json({
-    message: "Welcome to the API",
-  });
+router.get("/", async (req, res) => {
+
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  } else {
+    return res.status(200).json({ message: "Authorized", auth: true });
+  }
 });
 
 //User Login
@@ -41,6 +46,7 @@ router.post("/", checkUser, async (req, res) => {
     //Set cookie
     res.cookie("auth_token", token, {
       httpOnly: true,
+      //Set max age 300 days
       maxAge: 1000 * 60 * 60 * 24 * 300,
       sameSite: "none",
       secure: true,
@@ -53,35 +59,6 @@ router.post("/", checkUser, async (req, res) => {
       .json({ message: "Login Successful", status: "success", token: token });
   } catch (error) {
     res.status(500).json({ message: error.message, status: "error" });
-  }
-});
-
-//Check User is login or not
-router.get("/isLoggedIn", async (req, res) => {
-  //Check user have token or not
-  const token = req.cookies.auth_token || req.body.token || req.headers["x-auth-token"];
-
-  if (token == undefined || token == null || token == "") {
-    return res.json(false);
-  }
-
-  const have_valid_tokem = jwt.verify(token, process.env.JWT_SECRET, {
-    algorithm: "HS256",
-  });
-
-  if (!have_valid_tokem) {
-    return res.json(false);
-  }
-
-  const id_from_token = have_valid_tokem.id;
-
-  //Check Same id have database
-  const user = await UsersSchema.findOne({ id_from_token }).lean();
-
-  if (user == undefined || user == null || user == "") {
-    res.json(false);
-  } else {
-    res.json(true);
   }
 });
 
