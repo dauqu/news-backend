@@ -54,15 +54,19 @@ router.get("/:id", async (req, res) => {
 
 //Get news by category
 router.get("/category/:category", async (req, res) => {
+
+  //Get param from url
+  const category = req.params.category;
+
+  //find news by category
   try {
     const news = await NewsSchema.find({
-      category: req.params.category,
+      category: category,
     }).lean().sort({ _id: -1 }).limit(100);
 
-    if (!news) {
-      return res
-        .status(404)
-        .json({ message: "News not found", status: "error" });
+    if (news.length === 0) {
+      //Return null if no news found
+      return res.status(200).json(null);
     }
     res.status(200).json(news);
   } catch (error) {
