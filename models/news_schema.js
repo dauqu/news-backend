@@ -14,6 +14,7 @@ const NewsSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+      required: true,
     },
     articles: {
       type: String,
