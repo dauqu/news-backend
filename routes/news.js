@@ -79,6 +79,7 @@ router.get("/category/:category", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
+  
   //Create Slug with filter to remove special characters
   const slug = slugify(req.body.title, {
     replacement: "-",
