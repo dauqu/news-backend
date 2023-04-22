@@ -40,7 +40,7 @@ router.get("/pages/:page", async (req, res) => {
 //Get one news
 router.get("/:id", async (req, res) => {
   try {
-    const news = await NewsSchema.findById(req.params.id).lean();
+    const news = await NewsSchema.findById(req.params.id).lean().populate({ path: "publisher", select: "-password -email -phone -role" });
 
     if (!news) {
       return res
