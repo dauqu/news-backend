@@ -1,24 +1,22 @@
 const mongoose = require("mongoose");
 
 //Schema
-const BookmarksSchema = new mongoose.Schema({
+const BookmarksSchema = new mongoose.Schema(
+  {
     user_id: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
+      ref: "users",
     },
     news_id: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
+      ref: "news",
     },
-    updated_at: {
-        type: Date,
-        default: Date.now,
-    },
-    created_at: {
-        type: Date,
-        default: Date.now,
-        immutable: true,
-    },
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model("bookmarks", BookmarksSchema);

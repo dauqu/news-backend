@@ -5,10 +5,11 @@ const slugify = require("slugify");
 //JWT authentication
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const CheckAuth = require("./../functions/check_auth");
 
 //Get all news
 router.get("/", async (req, res) => {
-  //Get all latest news 50 news 
+  //Get all latest news 50 news
   try {
     const news = await NewsSchema.find().sort({ _id: -1 }).limit(100);
     res.json(news);
@@ -54,7 +55,6 @@ router.get("/:id", async (req, res) => {
 
 //Get news by category
 router.get("/category/:category", async (req, res) => {
-
   //Get param from url
   const category = req.params.category;
 
@@ -62,7 +62,10 @@ router.get("/category/:category", async (req, res) => {
   try {
     const news = await NewsSchema.find({
       category: category,
-    }).lean().sort({ _id: -1 }).limit(100);
+    })
+      .lean()
+      .sort({ _id: -1 })
+      .limit(100);
 
     if (news.length === 0) {
       //Return null if no news found
@@ -83,30 +86,23 @@ router.post("/", async (req, res) => {
     lower: true,
   });
 
-  //Check user have token or not
-  const token = req.cookies.auth_token || req.body.token || req.headers["x-auth-token"];
+  const check = await CheckAuth(req, res);
 
-  if (token == undefined || token == null || token == "") {
-    return res.json(false);
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
   }
-
-  const have_valid_tokem = jwt.verify(token, process.env.JWT_SECRET, {
-    algorithm: "HS256",
-  });
-
-  if (!have_valid_tokem) {
-    return res.json(false);
-  }
-
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const news = new NewsSchema({
     title: req.body.title,
     articles: req.body.articles,
+    keywords: req.body.keywords,
+    tags: req.body.tags,
+    description: req.body.description,
     slug: slug,
     image: req.body.image,
     category: req.body.category,
-    publisher: have_valid_tokem.username,
+    publisher: check.data._id,
     read_more: req.body.read_more,
     is_published: false,
   });
@@ -161,6 +157,5 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 module.exports = router;

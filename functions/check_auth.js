@@ -44,7 +44,7 @@ async function CheckAuth(req, res) {
             }
         } else {
             //Return JSON 
-            return {
+            return { 
                 message: "Authorized",
                 auth: true,
                 data: userObject
