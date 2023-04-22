@@ -59,7 +59,7 @@ app.use(`${apiv1}/categories`, require("./routes/categories"));
 app.use(`${apiv1}/news`, require("./routes/news"));
 app.use(`${apiv1}/files`, require("./routes/files"));
 app.use(`${apiv1}/profile`, require("./routes/profile"));
-app.use(`${apiv1}/feed`, require("./routes/feed"));
+app.use(`${apiv1}/tranding`, require("./routes/tranding"));
 app.use(`${apiv1}/bookmarks`, require("./routes/bookmarks"));
 app.use(`${apiv1}/search`, require("./routes/search"));
 app.use(`${apiv1}/users`, require("./routes/users"));

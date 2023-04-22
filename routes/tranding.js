@@ -6,7 +6,7 @@ const User_Model = require("../models/users_schema");
 router.get("/", async (req, res) => {
   try {
     //Get all news with publisher name
-    const news = await NewsSchema.find().populate("publisher", "name");
+    const news = await NewsSchema.find().populate({ path: "publisher", select: "-password -email -phone -role" });
     res.status(200).json(news);
     
   } catch (error) {
