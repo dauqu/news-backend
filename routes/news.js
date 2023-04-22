@@ -11,7 +11,7 @@ const CheckAuth = require("./../functions/check_auth");
 router.get("/", async (req, res) => {
   //Get all latest news 50 news
   try {
-    const news = await NewsSchema.find().sort({ _id: -1 }).limit(100).populate("publisher");
+    const news = await NewsSchema.find().sort({ _id: -1 }).limit(100).populate({ path: "publisher", select: "-password -email -phone -role" });
     res.json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -79,7 +79,7 @@ router.get("/category/:category", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
-  
+
   //Create Slug with filter to remove special characters
   const slug = slugify(req.body.title, {
     replacement: "-",
