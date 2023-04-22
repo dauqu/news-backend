@@ -35,6 +35,7 @@ const NewsSchema = new mongoose.Schema(
     publisher: {
       type: String,
       required: true,
+      ref: "users",
     },
     category: {
       type: String,

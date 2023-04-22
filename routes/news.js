@@ -11,7 +11,7 @@ const CheckAuth = require("./../functions/check_auth");
 router.get("/", async (req, res) => {
   //Get all latest news 50 news
   try {
-    const news = await NewsSchema.find().sort({ _id: -1 }).limit(100);
+    const news = await NewsSchema.find().sort({ _id: -1 }).limit(100).populate("publisher");
     res.json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
