@@ -26,6 +26,7 @@ const NewsSchema = new mongoose.Schema(
     },
     tags: {
       type: Array,
+      required: true,
     },
     image: {
       type: String,
