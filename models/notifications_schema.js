@@ -18,11 +18,8 @@ const NotificationsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    created_at: {
-        type: Date, 
-        default: Date.now,
-        immutable: true,
-    },
+}, {
+    timestamps: true,
 });
 
 module.exports = mongoose.model("notifications", NotificationsSchema);

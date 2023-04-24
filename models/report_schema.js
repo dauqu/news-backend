@@ -19,15 +19,8 @@ const ReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  updated_at: {
-    type: String,
-    default: Date.now,
-  },
-  created_at: {
-    type: Date,
-    default: Date.now,
-    immutable: true,
-  },
+}, {
+  timestamps: true,
 });
 
 module.exports = mongoose.model("report", ReportSchema);
