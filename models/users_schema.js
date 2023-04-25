@@ -19,8 +19,8 @@ const UsersSchema = new mongoose.Schema({
     default: "I am new to this app.",
   },
   phone: {
-    type: Array,
-    default: [],
+    type: String,
+    default: null,
   },
   username: {
     type: String,
@@ -37,6 +37,10 @@ const UsersSchema = new mongoose.Schema({
   country: {
     type: String,
     default: "IN",
+  },
+  country_code: {
+    type: String,
+    default: "+91",
   },
   password: {
     type: String,
