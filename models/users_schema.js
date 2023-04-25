@@ -34,11 +34,15 @@ const UsersSchema = new mongoose.Schema({
     type: String,
     default: "en",
   },
-  country: {
+  country_name: {
+    type: String,
+    default: "India",
+  },
+  code: {
     type: String,
     default: "IN",
   },
-  country_code: {
+  dial_code: {
     type: String,
     default: "+91",
   },
