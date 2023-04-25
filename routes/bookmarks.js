@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     //CHeck if user has bookmarks
     if (bookmarks.length === 0) {
       //Return null
-      return null;
+      return res.status(200).json(null);
     } else {
       res.status(200).json(bookmarks);
     }
