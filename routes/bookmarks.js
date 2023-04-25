@@ -15,7 +15,13 @@ router.get("/", async (req, res) => {
 
   try {
     const bookmarks = await BookmarksSchema.find({ user_id: check.data._id }).populate("news_id");
-    res.status(200).json(bookmarks);
+    //CHeck if user has bookmarks
+    if (bookmarks.length === 0) {
+      //Return null
+      return null;
+    } else {
+      res.status(200).json(bookmarks);
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
