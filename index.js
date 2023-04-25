@@ -53,8 +53,8 @@ app.get("/files", (req, res) => {
 
 const apiv1 = "/api/v1";
 
-app.use(`${apiv1}/login`, require("./routes/login"));
 app.use(`${apiv1}/register`, require("./routes/register"));
+app.use(`${apiv1}/login`, require("./routes/login"));
 app.use(`${apiv1}/categories`, require("./routes/categories"));
 app.use(`${apiv1}/news`, require("./routes/news"));
 app.use(`${apiv1}/files`, require("./routes/files"));

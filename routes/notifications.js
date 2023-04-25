@@ -13,14 +13,14 @@ router.get("/", async (req, res) => {
     }
 });
 
- 
+
 //Add bookmark
 router.post("/", (req, res) => {
     const notification = new NotificationsSchema({
         title: req.body.title,
         description: req.body.description,
         image: req.body.image,
-        link: req.body.link, 
+        link: req.body.link,
     });
     try {
         notification.save();

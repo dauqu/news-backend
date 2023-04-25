@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 router.get("/", (req, res) => {
   res.json({
-    message: "Welcome to the API",
+    message: "Welcome to the register route",
   });
 });
 
@@ -17,14 +17,10 @@ router.post("/", validateRegister, async (req, res) => {
   const save_user = new UsersSchema({
     full_name: req.body.full_name,
     dp: "https://styles.redditmedia.com/t5_2c83sr/styles/profileIcon_4dwzf4syg0w51.png",
-    title: "I am new here :)",
-    about: "Edit your profile to add more information about yourself",
     phone: req.body.phone,
     email: req.body.email,
     username: req.body.username,
     password: hashed_password,
-    language: "english",
-    country: "india",
   });
   try {
     await save_user.save();
@@ -38,22 +34,19 @@ router.post("/", validateRegister, async (req, res) => {
 
 //Middleware for register validation
 async function validateRegister(req, res, next) {
-  const { full_name, phone, email, username, password } = req.body;
+  const { full_name, email, username, password } = req.body;
 
   //Check if all fields are filled
   if (
     full_name === "" ||
-    phone === "" ||
     email === "" ||
     username === "" ||
     password === "" ||
     full_name === undefined ||
-    phone === undefined ||
     email === undefined ||
     username === undefined ||
     password === undefined ||
     full_name === null ||
-    phone === null ||
     email === null ||
     username === null ||
     password === null
@@ -104,20 +97,20 @@ async function validateRegister(req, res, next) {
     });
 
   //Check phone is valid
-  const phone_regex = /^[0-9]{10}$/;
-  if (!phone_regex.test(phone))
-    return res.status(400).json({
-      message: "Phone is not valid",
-      status: "error",
-    });
+  // const phone_regex = /^[0-9]{10}$/;
+  // if (!phone_regex.test(phone))
+  //   return res.status(400).json({
+  //     message: "Phone is not valid",
+  //     status: "error",
+  //   });
 
   //Check phone is unique
-  const phone_exists = await UsersSchema.findOne({ phone: phone });
-  if (phone_exists)
-    return res.status(400).json({
-      message: "Phone is already exists",
-      status: "error",
-    });
+  // const phone_exists = await UsersSchema.findOne({ phone: phone });
+  // if (phone_exists)
+  //   return res.status(400).json({
+  //     message: "Phone is already exists",
+  //     status: "error",
+  //   });
 
   next();
 }
