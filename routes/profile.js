@@ -22,14 +22,22 @@ router.post("/", async (req, res) => {
   if (check.auth === false) {
     return res.status(401).json({ message: "Unauthorized", data: null, auth: false });
   } else {
-    const { name, username, email, phone } = req.body;
+
+    //Find by id and upadte user
     const user = await UsersSchema.findById(check.data._id);
     if (user) {
-      user.name = name;
-      user.username = username;
-      user.email = email;
-      user.phone = phone;
-      await user.save();
+      user.full_name = req.body.full_name;
+      user.dp = req.body.dp;
+      user.title = req.body.title;
+      user.about = req.body.about;
+      user.phone = req.body.phone;
+      user.username = req.body.username;
+      user.email = req.body.email;
+      user.language = req.body.language;
+      user.country_name = req.body.country_name;
+      user.code = req.body.code;
+      user.dial_code = req.body.dial_code;
+      user.save();
       return res.status(200).json({ message: "Profile updated successfully", data: user, auth: true });
     } else {
       return res.status(404).json({ message: "User not found", data: null, auth: false });
