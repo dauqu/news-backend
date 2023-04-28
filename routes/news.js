@@ -63,11 +63,16 @@ router.get("/:id", async (req, res) => {
         .json({ message: "News not found", status: "error" });
     }
 
-    //Add views to news if not exist
+    // Add a description field if it does not exist
+    if (!news.description) {
+      news.description = "This news article does not have a description.";
+    }
+
+    //Add views if it does not exist
     if (!news.views) {
       news.views = 0;
     }
-    
+
     // Increment the view count by 1
     news.views += 1;
     await news.save();
@@ -77,6 +82,7 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 
 
