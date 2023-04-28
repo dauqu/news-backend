@@ -38,20 +38,42 @@ router.get("/pages/:page", async (req, res) => {
 });
 
 //Get one news
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const news = await NewsSchema.findById(req.params.id).lean().populate({ path: "publisher", select: "-password -email -phone -role" });
+
+//     if (!news) {
+//       return res
+//         .status(404)
+//         .json({ message: "News not found", status: "error" });
+//     }
+//     res.status(200).json(news);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
+
 router.get("/:id", async (req, res) => {
   try {
-    const news = await NewsSchema.findById(req.params.id, { $inc: { views: 1 } }).lean().populate({ path: "publisher", select: "-password -email -phone -role" });
+    const news = await NewsSchema.findById(req.params.id).populate({ path: "publisher", select: "-password -email -phone -role" });
 
     if (!news) {
       return res
         .status(404)
         .json({ message: "News not found", status: "error" });
     }
+    
+    // Increment the view count by 1
+    news.views += 1;
+    await news.save();
+
     res.status(200).json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
+
 
 //Get news by category
 router.get("/category/:category", async (req, res) => {
