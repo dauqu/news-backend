@@ -62,6 +62,11 @@ router.get("/:id", async (req, res) => {
         .status(404)
         .json({ message: "News not found", status: "error" });
     }
+
+    //Add views to news if not exist
+    if (!news.views) {
+      news.views = 0;
+    }
     
     // Increment the view count by 1
     news.views += 1;
