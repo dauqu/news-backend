@@ -57,6 +57,7 @@ app.use(`${apiv1}/register`, require("./routes/register"));
 app.use(`${apiv1}/login`, require("./routes/login"));
 app.use(`${apiv1}/categories`, require("./routes/categories"));
 app.use(`${apiv1}/news`, require("./routes/news"));
+app.use(`${apiv1}/comments`, require("./routes/comments"));
 app.use(`${apiv1}/files`, require("./routes/files"));
 app.use(`${apiv1}/profile`, require("./routes/profile"));
 app.use(`${apiv1}/tranding`, require("./routes/tranding"));
