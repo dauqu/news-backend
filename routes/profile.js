@@ -99,7 +99,9 @@ router.post("/update-password", async (req, res) => {
   }
 });
 
-router.post("/reset-password", async (req, res) => {});
+router.post("/reset-password", async (req, res) => {
+  
+});
 
 //Verify email
 router.post("/verify", async (req, res) => {

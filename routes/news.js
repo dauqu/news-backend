@@ -94,7 +94,7 @@ router.get("/", async (req, res) => {
   try {
     const news = await NewsSchema.find().sort({ _id: -1 }).limit(100).populate({
       path: "publisher",
-      select: "-password -email -phone -role -language",
+      select: "-password -email -phone -role -language -rpt",
     });
     res.json(news);
   } catch (error) {
@@ -106,7 +106,7 @@ router.get("/:id", async (req, res) => {
   try {
     const news = await NewsSchema.findById(req.params.id).populate({
       path: "publisher",
-      select: "-password -email -phone -role",
+      select: "-password -email -phone -role -rpt",
     });
 
     if (!news) {
