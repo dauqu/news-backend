@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const BookmarksSchema = require("../models/bookmarks_schema");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const CheckAuth = require("./../functions/check_auth");
 
