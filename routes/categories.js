@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const CategoriesSchema = require("./../models/categories_schema");
 const Slugyfy = require("slugify");
+const CheckAuth = require("./../functions/check_auth");
 
 //Get all categories
 router.get("/", async (req, res) => {
@@ -30,6 +31,18 @@ router.get("/:id", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
+  const check = await CheckAuth(req, res);
+
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  //Check if user is admin
+  if (check.data.role !== "admin") {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized, only admin can create category" });
+  }
 
   //Create slug with remove spaces and lowercase
   const slug = Slugyfy(req.body.name, {
@@ -56,6 +69,19 @@ router.post("/", async (req, res) => {
 
 //Update One
 router.patch("/:id", async (req, res) => {
+  const check = await CheckAuth(req, res);
+
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  //Check if user is admin
+  if (check.data.role !== "admin") {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized, only admin can create category" });
+  }
+
   try {
     const category = await CategoriesSchema.findById(req.params.id);
 
@@ -79,6 +105,19 @@ router.patch("/:id", async (req, res) => {
 
 //Delete One
 router.delete("/:id", async (req, res) => {
+  const check = await CheckAuth(req, res);
+
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  //Check if user is admin
+  if (check.data.role !== "admin") {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized, only admin can create category" });
+  }
+
   try {
     const category = await CategoriesSchema.findById(req.params.id);
     if (!category) {
