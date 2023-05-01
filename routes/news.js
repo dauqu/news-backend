@@ -8,18 +8,7 @@ require("dotenv").config();
 const CheckAuth = require("./../functions/check_auth");
 
 //Get all news
-router.get("/", async (req, res) => {
-  //Get all latest news 50 news
-  try {
-    const news = await NewsSchema.find().sort({ _id: -1 }).limit(100).populate({ path: "publisher", select: "-password -email -phone -role" });
-    res.json(news);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-//Get all news
-router.get("/pages/:page", async (req, res) => {
+router.get("/page/:page", async (req, res) => {
   const page = req.params.page;
   //Each page will have 10 news
   const limit = 10;
@@ -30,32 +19,95 @@ router.get("/pages/:page", async (req, res) => {
       .populate("publisher", "name")
       .sort({ date: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .populate({
+        path: "publisher",
+        select: "-password -email -phone -role -rpt",
+      });
     res.status(200).json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-//Get one news
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const news = await NewsSchema.findById(req.params.id).lean().populate({ path: "publisher", select: "-password -email -phone -role" });
+//Trandings news
+router.get("/tranding/:page", async (req, res) => {
+  const page = req.params.page;
+  //Each page will have 10 news
+  const limit = 10;
+  const skip = (page - 1) * limit;
+  try {
+    const currentDate = new Date();
+    const pastDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000); // subtract 24 hours from the current date
 
-//     if (!news) {
-//       return res
-//         .status(404)
-//         .json({ message: "News not found", status: "error" });
-//     }
-//     res.status(200).json(news);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
+    const news = await NewsSchema.find({
+      published: true,
+      date: { $gte: pastDate },
+    })
+      .populate("publisher", "name")
+      .sort({ views: -1 }) // sort by most views
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "publisher",
+        select: "-password -email -phone -role -rpt",
+      });
+
+    res.status(200).json(news);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//Trandings news
+router.get("/latest/:page", async (req, res) => {
+  const page = req.params.page;
+  //Each page will have 10 news
+  const limit = 10;
+  const skip = (page - 1) * limit;
+  try {
+    const currentDate = new Date();
+    const pastDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000); // subtract 24 hours from the current date
+
+    const news = await NewsSchema.find({
+      published: true,
+      date: { $gte: pastDate },
+    })
+      .populate("publisher", "name")
+      .sort({ date: -1 }) // sort by most recent
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "publisher",
+        select: "-password -email -phone -role -rpt",
+      });
+
+    res.status(200).json(news);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+//Get all news
+router.get("/", async (req, res) => {
+  //Get all latest news 50 news
+  try {
+    const news = await NewsSchema.find().sort({ _id: -1 }).limit(100).populate({
+      path: "publisher",
+      select: "-password -email -phone -role -language",
+    });
+    res.json(news);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 router.get("/:id", async (req, res) => {
   try {
-    const news = await NewsSchema.findById(req.params.id).populate({ path: "publisher", select: "-password -email -phone -role" });
+    const news = await NewsSchema.findById(req.params.id).populate({
+      path: "publisher",
+      select: "-password -email -phone -role",
+    });
 
     if (!news) {
       return res
@@ -83,9 +135,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
-
-
 //Get news by category
 router.get("/category/:category", async (req, res) => {
   //Get param from url
@@ -112,7 +161,6 @@ router.get("/category/:category", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
-
   //Create Slug with filter to remove special characters
   const slug = slugify(req.body.title, {
     replacement: "-",
