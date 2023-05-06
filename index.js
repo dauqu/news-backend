@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const fileUpload = require("express-fileupload");
+require('dotenv').config();
+// const SendMail = require("./functions/send_mail");
+// SendMail();
+
 
 const PORT = process.env.PORT || 4000;
 
@@ -43,7 +47,7 @@ const connectDB = require("./config/database");
 connectDB();
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Dauqu News API is running");
 });
 
 //Send html file

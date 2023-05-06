@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const UsersSchema = require("./../models/users_schema");
 const bcrypt = require("bcryptjs");
+const { v4: uuidv4 } = require('uuid');
+const SendMail = require("./../functions/send_mail");
 
 router.get("/", (req, res) => {
   res.json({
@@ -13,6 +15,8 @@ router.post("/", validateRegister, async (req, res) => {
   //Hash password
   const hashed_password = await bcrypt.hash(req.body.password, 10);
 
+  const uuid = uuidv4();
+
   //Save user to database
   const save_user = new UsersSchema({
     full_name: req.body.full_name,
@@ -21,9 +25,13 @@ router.post("/", validateRegister, async (req, res) => {
     email: req.body.email,
     username: req.body.username,
     password: hashed_password,
+    rpt: uuid,
   });
   try {
     await save_user.save();
+
+    const html = `<h1>Verify your email</h1><p>Click <a href="https://dauqunews.vercel.app/verify/${uuid}">here</a> to verify your email</p>`;
+    SendMail(req.body.email, uuid, req.body.full_name, html);
     res.status(200).json({
       message: "User created successfully",
     });
