@@ -146,23 +146,33 @@ router.get("/:id", async (req, res) => {
 });
 
 //Get news by category
-router.get("/category/:category", async (req, res) => {
+router.get("/category/:category/:page", async (req, res) => {
   //Get param from url
   const category = req.params.category;
+  const page = req.params.page;
+
+  //If page is not number
+  if (isNaN(req.params.page)) {
+    return res.status(400).json({ message: "Invalid page number" });
+  }
 
   //find news by category
   try {
-    const news = await NewsSchema.find({
-      category: category,
-    })
-      .lean()
-      .sort({ _id: -1 })
-      .limit(100);
+    //Get new by category and each  page will have 10 news
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
-    if (news.length === 0) {
-      //Return null if no news found
-      return res.status(200).json(null);
-    }
+    const news = await NewsSchema.find({ category: category, published: true }) // find news by category
+      .sort({ date: -1 }) // sort by most recent
+      .skip(skip)
+      .limit(limit)
+      //Remove title and description from news
+      .select("-articles -is_published -keywords -tags -publisher");
+    // .populate({
+    //   path: "publisher",
+    //   select: "-password -email -phone -role -rpt",
+    // });
+
     res.status(200).json(news);
   } catch (error) {
     res.status(500).json({ message: error.message });
