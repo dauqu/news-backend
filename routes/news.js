@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const NewsSchema = require("../models/news_schema");
 const slugify = require("slugify");
-//JWT authentication
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const CheckAuth = require("./../functions/check_auth");
 
@@ -66,31 +64,26 @@ router.get("/tranding/:page", async (req, res) => {
   }
 });
 
-//Trandings news
 router.get("/latest/:page", async (req, res) => {
-  if (isNaN(req.params.page)) {
+  const page = parseInt(req.params.page);
+
+  if (isNaN(page) || page < 1) {
     return res.status(400).json({ message: "Invalid page number" });
   }
-  const page = req.params.page;
-  //Each page will have 10 news
+
   const limit = 10;
   const skip = (page - 1) * limit;
-  try {
-    const currentDate = new Date();
-    const pastDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000); // subtract 24 hours from the current date
+  const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
+  try {
     const news = await NewsSchema.find({
       published: true,
-      date: { $gte: pastDate },
+      createat: { $gte: pastDate },
     })
-      .populate("publisher", "name")
-      .sort({ date: -1 }) // sort by most recent
+      .sort({ date: -1 })
       .skip(skip)
       .limit(limit)
-      .populate({
-        path: "publisher",
-        select: "-password -email -phone -role -rpt",
-      });
+      .populate("publisher", "-password -email -phone -role -rpt");
 
     res.status(200).json(news);
   } catch (error) {
