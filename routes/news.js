@@ -175,6 +175,17 @@ router.get("/category/:category/:page", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
+
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  //Check if user is admin
+  if (check.data.role !== "admin") {
+    return res.status(401).json({ message: "Only Admin Can Publish News", auth: false });
+  }
+
   //Check file is exist
   if (!req.files) {
     return res.status(400).json({ message: "Image is required" });
@@ -214,12 +225,6 @@ router.post("/", async (req, res) => {
     remove: /[*+~.()'"!:@]/g,
     lower: true,
   });
-
-  const check = await CheckAuth(req, res);
-
-  if (check.auth === false) {
-    return res.status(401).json({ message: "Unauthorized", auth: false });
-  }
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const news = new NewsSchema({
