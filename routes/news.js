@@ -9,6 +9,9 @@ const CheckAuth = require("./../functions/check_auth");
 
 //Get all news
 router.get("/page/:page", async (req, res) => {
+  if (isNaN(req.params.page)) {
+    return res.status(400).json({ message: "Invalid page number" });
+  }
   const page = req.params.page;
   //Each page will have 10 news
   const limit = 10;
@@ -32,6 +35,10 @@ router.get("/page/:page", async (req, res) => {
 
 //Trandings news
 router.get("/tranding/:page", async (req, res) => {
+  //Check if page is not a number
+  if (isNaN(req.params.page)) {
+    return res.status(400).json({ message: "Invalid page number" });
+  }
   const page = req.params.page;
   //Each page will have 10 news
   const limit = 10;
@@ -61,6 +68,9 @@ router.get("/tranding/:page", async (req, res) => {
 
 //Trandings news
 router.get("/latest/:page", async (req, res) => {
+  if (isNaN(req.params.page)) {
+    return res.status(400).json({ message: "Invalid page number" });
+  }
   const page = req.params.page;
   //Each page will have 10 news
   const limit = 10;
