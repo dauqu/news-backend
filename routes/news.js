@@ -3,6 +3,7 @@ const router = express.Router();
 const NewsSchema = require("../models/news_schema");
 const slugify = require("slugify");
 require("dotenv").config();
+const fs = require("fs");
 const CheckAuth = require("./../functions/check_auth");
 
 //Get all news
@@ -174,6 +175,39 @@ router.get("/category/:category/:page", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
+  //Check file is exist
+  if (!req.files) {
+    return res.status(400).json({ message: "Image is required" });
+  }
+
+  //Create folder in file by date
+  const date = new Date();
+  const name =
+    date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear();
+
+  const folderName = "./files/" + name + "/";
+
+  if (!fs.existsSync(folderName)) {
+    fs.mkdirSync(folderName);
+  }
+
+  //Rename image
+  const image = req.files.image;
+
+  //Rename file with slug
+  const file_slug = slugify(image.name, {
+    replacement: "-",
+    remove: /[*+~_()'"!:@]/g,
+    lower: true,
+  });
+
+  //Move file to folder
+  image.mv(folderName + file_slug, (err) => {
+    if (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
   //Create Slug with filter to remove special characters
   const slug = slugify(req.body.title, {
     replacement: "-",
@@ -195,7 +229,7 @@ router.post("/", async (req, res) => {
     tags: req.body.tags,
     description: req.body.description,
     slug: slug,
-    image: req.body.image,
+    image: name + "/" + file_slug,
     category: req.body.category,
     publisher: check.data._id,
     read_more: req.body.read_more,
