@@ -5,7 +5,12 @@ require("dotenv").config();
 const CheckAuth = require("./../functions/check_auth");
 
 //Get bookmarks
-router.get("/", async (req, res) => {
+router.get("/:page", async (req, res) => {
+  //Check if page is not a number
+  if (isNaN(req.params.page)) {
+    return res.status(400).json({ message: "Invalid page number" });
+  }
+
   const check = await CheckAuth(req, res);
 
   if (check.auth === false) {
@@ -13,7 +18,17 @@ router.get("/", async (req, res) => {
   }
 
   try {
-    const bookmarks = await BookmarksSchema.find({ user_id: check.data._id }).populate("news_id");
+    // const bookmarks = await BookmarksSchema.find({ user_id: check.data._id }).populate("news_id");
+    //Get bookmarks by page each page will have 10 bookmarks
+    const page = req.params.page;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const bookmarks = await BookmarksSchema.find({ user_id: check.data._id })
+      .populate("news_id")
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limit);
+
     //CHeck if user has bookmarks
     if (bookmarks.length === 0) {
       //Return null
