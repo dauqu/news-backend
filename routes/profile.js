@@ -99,13 +99,25 @@ router.post("/update-password", async (req, res) => {
   }
 });
 
-router.post("/reset-password", async (req, res) => {
-  
-});
+router.post("/reset-password", async (req, res) => {});
 
 //Verify email
-router.post("/verify", async (req, res) => {
-  const { email } = req.body;
+router.get("/verify-email/:uuid", async (req, res) => {
+  //Get uuid
+  const uuid = req.params.uuid;
+
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized", data: null, auth: false });
+  }
+
+  //Match UUID
+  if (uuid !== check.data.rpt) {
+    return res.status(400).json({ message: "Invalid link" });
+  }
+
 });
 
 //Verify phone
