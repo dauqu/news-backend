@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const PageSchema = require("../models/page_schema");
+const slugify = require("slugify");
 
 //Get all notifications
 router.get("/", async (req, res) => {
@@ -31,7 +32,7 @@ router.post("/", (req, res) => {
   try {
     page.save();
     res.status(201).json({
-      message: "Notification added",
+      message: "Page Added",
     });
   } catch (error) {
     res.status(500).json({
