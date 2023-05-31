@@ -71,6 +71,7 @@ app.use(`${apiv1}/search`, require("./routes/search"));
 app.use(`${apiv1}/users`, require("./routes/users"));
 app.use(`${apiv1}/notifications`, require("./routes/notifications"));
 app.use(`${apiv1}/pages`, require("./routes/pages"));
+app.use(`${apiv1}/report`, require("./routes/report"));
 
 app.use(`${apiv1}/terms`, require("./routes/terms"));
 app.use(`${apiv1}/about`, require("./routes/about"));
