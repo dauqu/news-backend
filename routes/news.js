@@ -175,7 +175,6 @@ router.get("/category/:category/:page", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
-
   const check = await CheckAuth(req, res);
   if (check.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
@@ -183,7 +182,9 @@ router.post("/", async (req, res) => {
 
   //Check if user is admin
   if (check.data.role !== "admin") {
-    return res.status(401).json({ message: "Only Admin Can Publish News", auth: false });
+    return res
+      .status(401)
+      .json({ message: "Only Admin Can Publish News", auth: false });
   }
 
   //Check file is exist
@@ -225,6 +226,13 @@ router.post("/", async (req, res) => {
     remove: /[*+~.()'"!:@]/g,
     lower: true,
   });
+
+  // Check if slug already exists
+  const existingNews = await NewsSchema.findOne({ slug });
+
+  if (existingNews) {
+    return res.status(400).json({ message: "Slug already exists" });
+  }
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const news = new NewsSchema({
